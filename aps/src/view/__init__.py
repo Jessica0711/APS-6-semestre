@@ -1,1 +1,1 @@
-__all__ = ['telaInicial']
+__all__ = ['telaInicial','telaCadastro','telaUsuario']
