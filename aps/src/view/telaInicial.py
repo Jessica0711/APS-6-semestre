@@ -2,8 +2,6 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
 
-import cv2 as cv
-import numpy as np
 from src.controller import (cadastroController, loginController)
 from src.model import usuario
 
@@ -242,6 +240,11 @@ class TelaCadastro:
                 self.digital, nome, login, senha, nivel)
             messagebox.askokcancel("Ministério do Meio Ambiente ",
                                    "Funcionário Cadastrado")
+            self.digital = ''
+            self.campoAcesso.delete(0)
+            self.campoLogin.delete(0)
+            self.campoNome.delete(0)
+            self.campoSenha.delete(0)
             self.voltarInicio()
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
@@ -318,7 +321,7 @@ class TelaUsuario:
 
         '#Usuario'
         self.nomeUsuario = tk.Label(self.quartoContainer)
-        self.nomeUsuario["text"] = (user.nome)
+        self.nomeUsuario["text"] = user.nome
         self.nomeUsuario["fg"] = ("#808080")
         self.nomeUsuario["font"] = ("Britannic Bold", "11", "italic")
         self.nomeUsuario["bg"] = ("#BDECB6")
@@ -360,17 +363,6 @@ class TelaUsuario:
         self.quintoContainer = tk.Frame(master)
         self.quintoContainer["bg"] = ("#BDECB6")
         self.quintoContainer.pack()
-
-        '#Botão Ver dados'
-        self.dados = tk.Button(self.quintoContainer, text=" Ver meus dados")
-        self.dados["bd"] = 0
-        self.dados["width"] = 15
-        self.dados["height"] = 1
-        self.dados["bg"] = ("#32471F")
-        self.dados["activebackground"] = ("#BDECB6")
-        self.dados["fg"] = ("white")
-        self.dados["font"] = ("Britannic Bold", "11")
-        self.dados.grid(row=7, column=0, pady=30, padx=10)
 
         '#Botão voltar'
         self.voltar = tk.Button(self.quintoContainer, text="Voltar")
@@ -572,10 +564,12 @@ class TelaIncial:
             else:
                 user = loginController.loginController(
                     login, None, self.digital)
-            if user != []:
-                self.nossaTela.withdraw()
-                self.novaTela = tk.Toplevel(self.nossaTela)
-                TelaUsuario(self.novaTela, self.nossaTela, user)
+            self.nossaTela.withdraw()
+            self.novaTela = tk.Toplevel(self.nossaTela)
+            TelaUsuario(self.novaTela, self.nossaTela, user)
+            self.campoLogin.delete(0)
+            self.campoSenha.delete(0)
+            self.digital = ''
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
                                    "É necessário preencher todos os campos")

@@ -13,20 +13,9 @@ def filter(image: np.array,
            krnsize: int = 11,
            krnsigma: int = 2,
            krn: np.array = None):
-    
+
     if method is None and krn is not None:
         return _filter_custom(image, krn)
-
-    if method == 'gaussx':
-        return _filter_gauss(image, 'x', krnsize, krnsigma)
-    elif method == 'gaussy':
-        return _filter_gauss(image, 'y', krnsize, krnsigma)
-    elif method == 'highpass':
-        return _filter_highpass(image, krnsize, krnsigma)
-    elif method == 'laplace':
-        return _filter_laplacian(image)
-    elif method == 'log':
-        return _filter_log(image, krnsize, krnsigma)
     elif method == 'lowpass':
         return _filter_lowpass(image, krnsize, krnsigma)
     elif method == 'sobelx':
@@ -43,23 +32,6 @@ def _filter_custom(image: np.array,
     return convolve2d(image.astype(np.float32), krn, mode='same')
 
 
-def _filter_log(image: np.array,
-                krnsize: np.array,
-                krnsigma: float):
-    side = np.floor(krnsize / 2)
-    x, y = np.meshgrid(np.arange(-side, side), np.arange(-side, side))
-
-    krn = -(np.pi * krnsigma**4) *\
-        (1 - ((x**2 + y**2) / (2 * krnsigma**2))) *\
-        np.exp(-(x**2 + y**2) / (2 * krnsigma**2))
-
-    return _filter_custom(image, krn)
-
-
-def _filter_laplacian(image: np.array):
-    return cv.Laplacian(image.astype(np.float32), cv.CV_32F)
-
-
 def _filter_sobel(image: np.array,
                   axis: str,
                   krnsize: int):
@@ -72,35 +44,12 @@ def _filter_sobel(image: np.array,
                         ksize=krnsize)
 
 
-def _filter_gauss(image: np.array,
-                  axis: str,
-                  krnsize: int,
-                  krnsigma: float):
-    assert(axis == 'x' or axis == 'y')
-    krn = cv.getGaussianKernel(krnsize, krnsigma)
-    krn = krn * krn.T
-    krny, krnx = np.gradient(krn)
-
-    if axis == 'x':
-        return _filter_custom(image, krnx)
-    elif axis == 'y':
-        return _filter_custom(image, krny)
-
-
 def _filter_lowpass(image: np.array,
                     krnsize: int,
                     krnsigma: float):
     krn = cv.getGaussianKernel(krnsize, krnsigma)
     krn = krn * krn.T
     return _filter_custom(image, krn)
-
-
-def _filter_highpass(image: np.array,
-                     krnsize: int,
-                     krnsigma: float):
-    krn = cv.getGaussianKernel(krnsize, krnsigma)
-    krn = krn * krn.T
-    return image.astype(np.float32) - _filter_custom(image, krn)
 
 
 def medgabor(image: np.array,

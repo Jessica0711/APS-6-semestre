@@ -1,1 +1,1 @@
-__all__ = ['controller', 'corn', 'dao', 'filters', 'model', 'view']
+__all__ = ['controller', 'corn', 'dao', 'filters', 'model', 'view', 'main']
