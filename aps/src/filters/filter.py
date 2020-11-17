@@ -1,11 +1,7 @@
 import cv2 as cv
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.signal import convolve2d
 from scipy.ndimage import rotate
-
-
-verbose = False
 
 
 def filter(image: np.array,
@@ -91,8 +87,4 @@ def medgabor(image: np.array,
                        c - krnsize:c + krnsize + 1]
         flt[r - krnsize][c - krnsize] = np.sum(blk * gab)
 
-        if verbose:
-            plt.figure()
-            plt.imshow(np.hstack((blk, gab)), cmap='gray')
-            plt.show()
     return flt

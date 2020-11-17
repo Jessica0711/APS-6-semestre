@@ -7,8 +7,6 @@ from scipy.signal import argrelextrema
 from skimage.morphology import skeletonize
 from src.filters import filter
 
-verbose = False
-
 
 def normalize(image: np.array,
               low: int,

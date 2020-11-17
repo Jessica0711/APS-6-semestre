@@ -241,10 +241,10 @@ class TelaCadastro:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
                                    "Funcionário Cadastrado")
             self.digital = ''
-            self.campoAcesso.delete(0)
-            self.campoLogin.delete(0)
-            self.campoNome.delete(0)
-            self.campoSenha.delete(0)
+            self.campoAcesso.delete(0, 100)
+            self.campoLogin.delete(0, 100)
+            self.campoNome.delete(0, 100)
+            self.campoSenha.delete(0, 100)
             self.voltarInicio()
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
@@ -567,9 +567,10 @@ class TelaIncial:
             self.nossaTela.withdraw()
             self.novaTela = tk.Toplevel(self.nossaTela)
             TelaUsuario(self.novaTela, self.nossaTela, user)
-            self.campoLogin.delete(0)
-            self.campoSenha.delete(0)
+            self.campoLogin.delete(0, 100)
+            self.campoSenha.delete(0, 100)
             self.digital = ''
+            self.campoBiometria['text'] = ("Clique aqui e insira sua digital.")
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
                                    "É necessário preencher todos os campos")
