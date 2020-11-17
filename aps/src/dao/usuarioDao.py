@@ -9,26 +9,32 @@ class UsuarioDAO():
 
     def create(self, usuario):
         self.connection.execute("""
-        INSERT INTO usuarios (nome, login, senha, digital) VALUES (?,?,?,?)
-        """, (usuario.getNome(), usuario.getLogin(), usuario.getSenha(),
-              usuario.getDigital()))
+        INSERT INTO Usuario (nome, login, senha, nivelAcesso, radial, circular) VALUES (?,?,?,?,?,?)
+        """, (usuario.nome, usuario.login, usuario.senha,
+              usuario.nivelAcesso, usuario.radial, usuario.circular))
         self.conexao.commit()
 
     def read(self):
-        self.connection.execute('SELECT * FROM usuarios')
+        self.connection.execute('SELECT * FROM Usuario')
         return self.connection.fetchall()
 
     def update(self, login, senha):
         self.connection.execute("""
-        UPDATE usuarios SET login = ?, senha = ?
+        UPDATE Usuario SET login = ?, senha = ?
         """, login, senha)
         self.conexao.commit()
 
-    def delete(self, id):
-        self.connection.execute('DELETE FROM usuarios WHERE id = ?', id)
+    def delete(self, login, senha):
+        self.connection.execute('DELETE FROM Usuario WHERE login = ? anda senha = ?', login, senha)
 
-    def findUser(self, login, digital):
+    def findUserDigital(self, login, radial, circular):
         self.connection.execute("""
-        SELECT FROM usuarios WHERE login = ? AND digital = ?
-        """, login, digital)
+        SELECT * FROM Usuario WHERE login = ? AND radial = ? AND circular = ?
+        """, (login, radial, circular))
+        return self.connection.fetchall()
+
+    def findUserSenha(self, login, senha):
+        self.connection.execute("""
+        SELECT * FROM Usuario WHERE login = ? AND senha = ?
+        """, (login, senha))
         return self.connection.fetchall()

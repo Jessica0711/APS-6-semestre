@@ -2,11 +2,16 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
 
+import cv2 as cv
+import numpy as np
+from src.controller import (cadastroController, loginController)
+from src.model import usuario
+
 
 class TelaCadastro:
 
     def __init__(self, master, root):
-        
+        self.digital = ''
         self.nova = master
         self.nova.title("Tela Cadastro")
 
@@ -185,6 +190,7 @@ class TelaCadastro:
         self.cadastrar["fg"] = ("white")
         self.cadastrar["font"] = ("Britannic Bold", "11")
         self.cadastrar.grid(row=9, column=1, pady=50, padx=30)
+        self.cadastrar['command'] = self.onCadastrar
 
         '#Botão Voltar'
         self.voltar = tk.Button(self.decimoContainer, text=" Voltar")
@@ -204,23 +210,47 @@ class TelaCadastro:
         self.nova.config(bg="#BDECB6")
 
     '#Função de chamada do Popup'
+
     def mensagemAcesso(self):
-        messagebox.askokcancel("Ministério do Meio Ambiente ", "Nossos níveis de acesso são:\n\n- Nível dos funcionários : 1\n- Nível dos diretores : 2\n- Nível do Ministro do Meio Ambiente : 3\n\nPor favor, entrar apenas com o valor do seu nível no campo informado.")
+        messagebox.askokcancel("Ministério do Meio Ambiente ",
+                               "Nossos níveis de acesso são:\n\n- Nível dos funcionários : 1\n- Nível dos diretores : 2\n- Nível do Ministro do Meio Ambiente : 3\n\nPor favor, entrar apenas com o valor do seu nível no campo informado.")
 
     '#Função para abrir arquivo'
+
     def abrirArquivo(self):
-        self.digital = askopenfilename(initialfile="/Desktop", title="Selecione à sua digital", filetype=(("Arquivo de imagem", ".jpeg"), ("Arquivo de imagem", ".png", ), ("Arquivo de imagem", ".jng")))
-        print(self.digital)
+        self.digital = askopenfilename(initialfile="/Desktop",
+                                       title="Selecione à sua digital",
+                                       filetype=(("Arquivo de imagem", ".jpeg"),
+                                                 ("Arquivo de imagem", ".png"),
+                                                 ("Arquivo de imagem", ".jng"),
+                                                 ("Arquivo de imagem", ".jpg")))
+        self.campoBiometria['text'] = ("Biometria enviada")
 
     '#Função para voltar ao inicio'
+
     def voltarInicio(self):
         self.origem.deiconify()
         self.nova.destroy()
 
+    def onCadastrar(self):
+        nome = self.campoNome.get()
+        login = self.campoLogin.get()
+        senha = self.campoSenha.get()
+        nivel = self.campoAcesso.get()
+        if self.digital != '' and nome != '' and login != '' and senha != '' and nivel != '':
+            cadastroController.cadastroController(
+                self.digital, nome, login, senha, nivel)
+            messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                   "Funcionário Cadastrado")
+            self.voltarInicio()
+        else:
+            messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                   "É necessário preencher todos os campos")
+
 
 class TelaUsuario:
 
-    def __init__(self, master, root):
+    def __init__(self, master, root, user: usuario.Usuario):
 
         self.nova = master
         self.nova.title("Tela do Usuário")
@@ -233,7 +263,8 @@ class TelaUsuario:
         self.primeiroContainer.pack()
 
         '#Título'
-        self.titulo = tk.Label(self.primeiroContainer, text="Ministério do Meio Ambiente")
+        self.titulo = tk.Label(self.primeiroContainer,
+                               text="Ministério do Meio Ambiente")
         self.titulo["font"] = ("Britannic Bold", "16")
         self.titulo["bg"] = ("#BDECB6")
         self.titulo["fg"] = ("#32471F")
@@ -287,7 +318,7 @@ class TelaUsuario:
 
         '#Usuario'
         self.nomeUsuario = tk.Label(self.quartoContainer)
-        self.nomeUsuario["text"] = ("Ex: Luiz Antonio")
+        self.nomeUsuario["text"] = (user.nome)
         self.nomeUsuario["fg"] = ("#808080")
         self.nomeUsuario["font"] = ("Britannic Bold", "11", "italic")
         self.nomeUsuario["bg"] = ("#BDECB6")
@@ -303,7 +334,7 @@ class TelaUsuario:
 
         '#Senha do usuario'
         self.senhaUsuario = tk.Label(self.quartoContainer)
-        self.senhaUsuario["text"] = ("Ex: 12345")
+        self.senhaUsuario["text"] = user.senha
         self.senhaUsuario["fg"] = ("#808080")
         self.senhaUsuario["font"] = ("Britannic Bold", "11", "italic")
         self.senhaUsuario["bg"] = ("#BDECB6")
@@ -319,7 +350,7 @@ class TelaUsuario:
 
         '#Nivel de acesso do usuario'
         self.nivelUsuario = tk.Label(self.quartoContainer)
-        self.nivelUsuario["text"] = ("Ex: 1")
+        self.nivelUsuario["text"] = user.nivelAcesso
         self.nivelUsuario["fg"] = ("#808080")
         self.nivelUsuario["font"] = ("Britannic Bold", "11", "italic")
         self.nivelUsuario["bg"] = ("#BDECB6")
@@ -366,7 +397,7 @@ class TelaUsuario:
 class TelaIncial:
 
     def __init__(self, master):
-
+        self.digital = ''
         self.nossaTela = master
         self.nossaTela.title("Tela de Login")
 
@@ -498,7 +529,8 @@ class TelaIncial:
         self.entrar.grid(row=7, column=0)
 
         '#Botão Cadastrar'
-        self.cadastrar = tk.Button(self.setimoContainer, text="  ou  Cadastrar")
+        self.cadastrar = tk.Button(
+            self.setimoContainer, text="  ou  Cadastrar")
         self.cadastrar["bd"] = 0
         self.cadastrar["width"] = 12
         self.cadastrar["height"] = 1
@@ -515,19 +547,38 @@ class TelaIncial:
         root.resizable(0, 0)
 
     '#Função para abrir arquivo'
+
     def abrirArquivo(self):
-        self.digital = askopenfilename(initialfile="/Desktop", title="Selecione à sua digital", filetype=(("Arquivo de imagem", ".jpeg"), ("Arquivo de imagem", ".png", ), ("Arquivo de imagem", ".jng")))
-        print(self.digital)
-    '#Função para abrir arquivo'
+        self.digital = askopenfilename(initialfile="/Desktop",
+                                       title="Selecione à sua digital",
+                                       filetype=(("Arquivo de imagem", ".jpeg"),
+                                                 ("Arquivo de imagem", ".png", ),
+                                                 ("Arquivo de imagem", ".jng"),
+                                                 ("Arquivo de imagem", ".jpg")))
+        self.campoBiometria['text'] = ('Biometria enviada')
+
     def abrirCadastro(self):
         self.nossaTela.withdraw()
         self.novaTela = tk.Toplevel(self.nossaTela)
         TelaCadastro(self.novaTela, self.nossaTela)
     '#Função para acesso a plataforma'
+
     def acessoUsuario(self):
-        self.nossaTela.withdraw()
-        self.novaTela = tk.Toplevel(self.nossaTela)
-        TelaUsuario(self.novaTela, self.nossaTela)
+        login = self.campoLogin.get()
+        senha = self.campoSenha.get()
+        if login != '' and (senha != '' or self.digital != ''):
+            if senha != '':
+                user = loginController.loginController(login, senha)
+            else:
+                user = loginController.loginController(
+                    login, None, self.digital)
+            if user != []:
+                self.nossaTela.withdraw()
+                self.novaTela = tk.Toplevel(self.nossaTela)
+                TelaUsuario(self.novaTela, self.nossaTela, user)
+        else:
+            messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                   "É necessário preencher todos os campos")
 
 
 root = tk.Tk()

@@ -1,1 +1,2 @@
-__all__ = ['gaborFilter']
+__all__ = ['binarizarImagem', 'preprocessamento', 'feature', 'filter',
+           'minucias']

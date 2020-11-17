@@ -1,1 +1,1 @@
-__all__ = ['usuario']
+__all__ = ['usuario', 'fingerPrintImage']
