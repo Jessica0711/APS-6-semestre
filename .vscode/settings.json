@@ -1,5 +1,5 @@
 {
-    "python.pythonPath": "aps\\Scripts\\python.exe",
+    "python.pythonPath": "C:\\Users\\Jéssica\\AppData\\Local\\Programs\\Python\\Python38\\python.exe",
     "code-runner.executorMap": {
         "python": "aps\\Scripts\\python.exe",
     }
