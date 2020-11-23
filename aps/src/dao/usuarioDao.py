@@ -38,3 +38,9 @@ class UsuarioDAO():
         SELECT * FROM Usuario WHERE login = ? AND senha = ?
         """, (login, senha))
         return self.connection.fetchall()
+
+    def existDigital(self, radial, circular):
+        self.connection.execute("""
+        SELECT * FROM Usuario WHERE radial = ? AND circular = ?
+        """, (radial, circular))
+        return self.connection.fetchall()

@@ -120,7 +120,9 @@ class TelaCadastro:
         self.acesso.grid(row=5, column=1)
 
         '#Niveis de acesso'
-        self.campoAcesso = tk.Entry(self.sextoContainer)
+        funcCheck = self.sextoContainer.register(self.testaEntradaInteiro)
+        self.campoAcesso = tk.Entry(self.sextoContainer, validate='key',
+                                    validatecommand=(funcCheck, '%P'))
         self.campoAcesso["width"] = 21
         self.campoAcesso["font"] = ("Arial", "9")
         self.campoAcesso.grid(row=5, column=2, padx=5)
@@ -236,19 +238,35 @@ class TelaCadastro:
         senha = self.campoSenha.get()
         nivel = self.campoAcesso.get()
         if self.digital != '' and nome != '' and login != '' and senha != '' and nivel != '':
-            cadastroController.cadastroController(
+            cadastrado = cadastroController.cadastroController(
                 self.digital, nome, login, senha, nivel)
-            messagebox.askokcancel("Ministério do Meio Ambiente ",
-                                   "Funcionário Cadastrado")
-            self.digital = ''
-            self.campoAcesso.delete(0, 100)
-            self.campoLogin.delete(0, 100)
-            self.campoNome.delete(0, 100)
-            self.campoSenha.delete(0, 100)
-            self.voltarInicio()
+            if cadastrado is True:
+                messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                       "Funcionário Cadastrado")
+                self.digital = ''
+                self.campoAcesso.delete(0, 100)
+                self.campoLogin.delete(0, 100)
+                self.campoNome.delete(0, 100)
+                self.campoSenha.delete(0, 100)
+                self.voltarInicio()
+            else:
+                messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                       "Digital já cadastrada")
+                self.digital = ''
+                self.campoBiometria["text"] = (
+                    "Clique aqui e insira sua digital.")
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
                                    "É necessário preencher todos os campos")
+
+    def testaEntradaInteiro(self, valor):
+        if valor.isdigit():
+            if valor == '1' or valor == '2' or valor == '3':
+                return True
+            else:
+                return False
+        else:
+            return False
 
 
 class TelaUsuario:
@@ -564,16 +582,24 @@ class TelaIncial:
             else:
                 user = loginController.loginController(
                     login, None, self.digital)
+            self.logarUsuario(user)
+        else:
+            messagebox.askokcancel("Ministério do Meio Ambiente ",
+                                   "É necessário informar login e senha ou digital")
+
+    def logarUsuario(self, user: usuario.Usuario):
+        if user is not None:
             self.nossaTela.withdraw()
             self.novaTela = tk.Toplevel(self.nossaTela)
             TelaUsuario(self.novaTela, self.nossaTela, user)
             self.campoLogin.delete(0, 100)
             self.campoSenha.delete(0, 100)
-            self.digital = ''
-            self.campoBiometria['text'] = ("Clique aqui e insira sua digital.")
         else:
             messagebox.askokcancel("Ministério do Meio Ambiente ",
-                                   "É necessário preencher todos os campos")
+                                   "Funcionário não encontrado, por favor verifique suas informações")
+        self.digital = ''
+        self.campoBiometria['text'] = (
+            "Clique aqui e insira sua digital.")
 
 
 root = tk.Tk()
