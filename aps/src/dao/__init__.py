@@ -1,1 +1,1 @@
-__all__ = ['usuarioDao']
+__all__ = ['usuarioDao', 'textoDao']

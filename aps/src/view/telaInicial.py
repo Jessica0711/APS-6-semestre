@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 from tkinter.filedialog import askopenfilename
 
-from src.controller import (cadastroController, loginController)
+from src.controller import (cadastroController, loginController, textoNiveisController)
 from src.model import usuario
 
 
@@ -272,7 +272,7 @@ class TelaCadastro:
 class TelaUsuario:
 
     def __init__(self, master, root, user: usuario.Usuario):
-
+        self.user = user
         self.nova = master
         self.nova.title("Tela do Usuário")
 
@@ -345,22 +345,6 @@ class TelaUsuario:
         self.nomeUsuario["bg"] = ("#BDECB6")
         self.nomeUsuario.grid(row=4, column=1)
 
-        '#Senha'
-        self.senha = tk.Label(self.quartoContainer)
-        self.senha["text"] = ("Senha:")
-        self.senha["fg"] = ("#32471F")
-        self.senha["font"] = ("Britannic Bold", "11")
-        self.senha["bg"] = ("#BDECB6")
-        self.senha.grid(row=5, column=0)
-
-        '#Senha do usuario'
-        self.senhaUsuario = tk.Label(self.quartoContainer)
-        self.senhaUsuario["text"] = user.senha
-        self.senhaUsuario["fg"] = ("#808080")
-        self.senhaUsuario["font"] = ("Britannic Bold", "11", "italic")
-        self.senhaUsuario["bg"] = ("#BDECB6")
-        self.senhaUsuario.grid(row=5, column=1)
-
         '#Nivel de acesso'
         self.nivelAcesso = tk.Label(self.quartoContainer)
         self.nivelAcesso["text"] = ("Nivel de acesso:")
@@ -382,8 +366,25 @@ class TelaUsuario:
         self.quintoContainer["bg"] = ("#BDECB6")
         self.quintoContainer.pack()
 
+        '#Botão relatório'
+        self.relatório = tk.Button(self.quintoContainer, text="Relatório")
+        self.relatório["bd"] = 0
+        self.relatório["width"] = 12
+        self.relatório["height"] = 1
+        self.relatório["bg"] = ("#BDECB6")
+        self.relatório["activebackground"] = ("#BDECB6")
+        self.relatório["fg"] = ("#32471F")
+        self.relatório["font"] = ("Britannic Bold", "11")
+        self.relatório["command"] = self.abrirRelatorio
+        self.relatório.grid(row=8, column=0, pady=30)
+
+        '#Sexto container da janela'
+        self.sextoContainer = tk.Frame(master)
+        self.sextoContainer["bg"] = ("#BDECB6")
+        self.sextoContainer.pack()
+
         '#Botão voltar'
-        self.voltar = tk.Button(self.quintoContainer, text="Voltar")
+        self.voltar = tk.Button(self.sextoContainer, text="Voltar")
         self.voltar["bd"] = 0
         self.voltar["width"] = 12
         self.voltar["height"] = 1
@@ -392,7 +393,7 @@ class TelaUsuario:
         self.voltar["fg"] = ("#32471F")
         self.voltar["font"] = ("Britannic Bold", "11")
         self.voltar["command"] = self.voltarUsuario
-        self.voltar.grid(row=7, column=1, pady=30)
+        self.voltar.grid(row=8, column=1, pady=30)
 
         '#Configurações do Frame'
         self.nova.resizable(0, 0)
@@ -402,6 +403,11 @@ class TelaUsuario:
     def voltarUsuario(self):
         self.origem.deiconify()
         self.nova.destroy()
+    
+    def abrirRelatorio(self):
+        texto = textoNiveisController.textoNivelAcessoController(self.user.nivelAcesso)
+        messagebox.showinfo(title="Ministério do Meio Ambiente ",
+                            message= texto)
 
 
 class TelaIncial:

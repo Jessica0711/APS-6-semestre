@@ -825,3 +825,5 @@ aps/Lib/site-packages/pip/_vendor/webencodings/__pycache__/labels.cpython-38.pyc
 aps/Lib/site-packages/pip/_internal/__pycache__/cache.cpython-38.pyc
 aps/Lib/site-packages/pip/_internal/commands/__pycache__/freeze.cpython-38.pyc
 aps/Lib/site-packages/pip/_internal/operations/__pycache__/freeze.cpython-38.pyc
+aps/src/controller/__pycache__/textoNiveisController.cpython-38.pyc
+aps/src/dao/__pycache__/textoDao.cpython-38.pyc
